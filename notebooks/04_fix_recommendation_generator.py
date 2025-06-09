@@ -7,6 +7,7 @@ from llama_index.core.agent.workflow import ReActAgent
 from git import Repo
 from github import Github
 from databricks.sdk import WorkspaceClient
+import asyncio
 
 def suggest_fix(issue_summary):
     w = WorkspaceClient()
@@ -26,8 +27,12 @@ def suggest_fix(issue_summary):
         llm=llm,
         system_prompt="You are a senior data engineer tasked with fixing data pipeline problems with python, pyspark, and databricks. Your job is to suggest code fix recommendations for given pipeline failure problems.",
     )
-    response = await agent.run(prompt)
-    return response.response
+    async def get_response(p):
+        return await agent.run(p)
+    loop = asyncio.get_event_loop()
+    task = loop.create_task(get_response(prompt))
+    task_future = loop.run_until_complete(task)
+    return task_future.result.response
 
 
 ### AXED FOR TIME
@@ -53,7 +58,7 @@ fail_rsn = fail_rsn_df.collect()[1]
 notebook_path = fail_rsn_df.collect()[2]
 
 # get failure fix suggestion from model
-fail_fix_suggestion = suggest_fix(fail_rsn)
+fail_fix_suggestion = asyncio.run(suggest_fix(fail_rsn))
 
 spark.sql(f"""
 insert into table fail_fix_suggestions values (
