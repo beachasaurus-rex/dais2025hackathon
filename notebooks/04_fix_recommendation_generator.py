@@ -4,8 +4,6 @@
 from llama_index.llms.databricks import Databricks
 from llama_index.core.llms import ChatMessage
 from llama_index.core.agent.workflow import ReActAgent
-from git import Repo
-from github import Github
 from databricks.sdk import WorkspaceClient
 import asyncio
 
@@ -15,7 +13,7 @@ def suggest_fix(issue_summary):
     llm = Databricks(
         model="databricks-llama-4-maverick",
         api_key=tmp_token,
-        api_base=f"dbc-02e26b76-2786.cloud.databricks.com/serving-endpoints/databricks-llama-4-maverick/invocations"
+        api_base=f"https://dbc-02e26b76-2786.cloud.databricks.com/serving-endpoints/databricks-llama-4-maverick/invocations"
     )
     prompt = f"""
                 Here's the issue:
