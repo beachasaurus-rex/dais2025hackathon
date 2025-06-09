@@ -7,9 +7,10 @@ from databricks.sdk import WorkspaceClient
 
 def suggest_fix(issue_summary):
     w = WorkspaceClient()
+    tmp_token = w.tokens.create(comment="for model serving", lifetime_seconds=1200)
     llm = Databricks(
         model="databricks-llama-4-maverick",
-        api_key="dapi4fe12f8ac883773d371101a2fb417dea",
+        api_key=tmp_token,
         api_base=f"{w.config.host}/serving-endpoints/"
     )
     prompt = f"""
