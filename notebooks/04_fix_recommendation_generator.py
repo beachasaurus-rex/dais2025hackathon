@@ -22,17 +22,16 @@ def suggest_fix(issue_summary):
                 {issue_summary}
                 Suggest only a code fix to resolve it.
     """
+    msgs = [
+        ChatMessage(
+            role="system", content="You are a senior data engineer tasked with fixing data pipeline problems with python, pyspark, and databricks. Your job is to suggest code fix recommendations for given pipeline failure problems."
+        )
+    ]
+    llm.chat(msgs)
 
-    agent = ReActAgent(
-        llm=llm,
-        system_prompt="You are a senior data engineer tasked with fixing data pipeline problems with python, pyspark, and databricks. Your job is to suggest code fix recommendations for given pipeline failure problems.",
-    )
-    async def get_response(p):
-        return await agent.run(p)
-    loop = asyncio.get_event_loop()
-    task = loop.create_task(get_response(prompt))
-    task_future = loop.run_until_complete(task)
-    return task_future.result.response
+    resp = llm.complete(prompt)
+
+    return resp
 
 
 ### AXED FOR TIME
@@ -58,7 +57,7 @@ fail_rsn = fail_rsn_df.collect()[0][1]
 notebook_path = fail_rsn_df.collect()[0][2]
 
 # get failure fix suggestion from model
-fail_fix_suggestion = asyncio.run(suggest_fix(str(fail_rsn)))
+fail_fix_suggestion = asyncio.run(suggest_fix(fail_rsn))
 
 spark.sql(f"""
 insert into table fail_fix_suggestions (fail_rsn_key,fix_suggestion) values (
