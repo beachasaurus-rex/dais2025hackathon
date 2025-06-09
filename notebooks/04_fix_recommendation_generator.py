@@ -15,7 +15,7 @@ def suggest_fix(issue_summary):
     llm = Databricks(
         model="databricks-llama-4-maverick",
         api_key=tmp_token,
-        api_base=f"{w.config.host}/serving-endpoints/"
+        api_base=f"{w.config.host}/serving-endpoints/databricks-llama-4-maverick/invocations"
     )
     prompt = f"""
                 Here's the issue:
@@ -53,9 +53,9 @@ fail_rsn_df = spark.sql("""
     ) b
     on a.rsn_when = b.max_rsn_when
 """)
-rsn_key = fail_rsn_df.collect()[0]
-fail_rsn = fail_rsn_df.collect()[1]
-notebook_path = fail_rsn_df.collect()[2]
+rsn_key = fail_rsn_df.collect()[0][0]
+fail_rsn = fail_rsn_df.collect()[0][1]
+notebook_path = fail_rsn_df.collect()[0][2]
 
 # get failure fix suggestion from model
 fail_fix_suggestion = asyncio.run(suggest_fix(fail_rsn))
