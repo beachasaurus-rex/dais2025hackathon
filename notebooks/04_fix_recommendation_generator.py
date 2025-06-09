@@ -11,6 +11,8 @@ def suggest_fix(issue_summary):
        messages=[{"role": "user", "content": prompt}]
    )
    return response["choices"][0]["message"]["content"]
+
+
 # Example use
 issue = "Pipeline failed due to missing column 'order_status'."
 print(suggest_fix(issue))
