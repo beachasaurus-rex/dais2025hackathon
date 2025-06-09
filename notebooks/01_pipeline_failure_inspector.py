@@ -17,7 +17,7 @@ updates = response.json()["updates"]
 latest_failed = next((u for u in updates if u["state"] == "FAILED"), None)
 if latest_failed:
    spark.sql(f"""
-   insert into table fail_rsn values (
+   insert into table fail_rsn (rsn_when,rsn,notebook_path) values (
       current_timestamp(),
       "{latest_failed}",
       "placeholder_notebook_path"

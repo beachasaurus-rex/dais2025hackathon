@@ -61,7 +61,7 @@ notebook_path = fail_rsn_df.collect()[2]
 fail_fix_suggestion = asyncio.run(suggest_fix(fail_rsn))
 
 spark.sql(f"""
-insert into table fail_fix_suggestions values (
+insert into table fail_fix_suggestions (fail_rsn_key,fix_suggestion) values (
     {rsn_key},
     "{fail_fix_suggestion}"
 )
