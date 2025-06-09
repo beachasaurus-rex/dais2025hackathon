@@ -1,3 +1,6 @@
+%pip install -U llama-index llama-index-llms-databricks mlflow
+%restart_python
+
 from llama_index.llms.databricks import Databricks
 from llama_index.core.llms import ChatMessage
 from llama_index.core.agent.workflow import ReActAgent
