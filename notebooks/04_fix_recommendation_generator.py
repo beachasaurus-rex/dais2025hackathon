@@ -15,7 +15,7 @@ def suggest_fix(issue_summary):
     llm = Databricks(
         model="databricks-llama-4-maverick",
         api_key=tmp_token,
-        api_base=f"{w.config.host}/serving-endpoints/databricks-llama-4-maverick/invocations"
+        api_base=f"dbc-02e26b76-2786.cloud.databricks.com/serving-endpoints/databricks-llama-4-maverick/invocations"
     )
     prompt = f"""
                 Here's the issue:
@@ -58,7 +58,7 @@ fail_rsn = fail_rsn_df.collect()[0][1]
 notebook_path = fail_rsn_df.collect()[0][2]
 
 # get failure fix suggestion from model
-fail_fix_suggestion = asyncio.run(suggest_fix(fail_rsn))
+fail_fix_suggestion = asyncio.run(suggest_fix(str(fail_rsn)))
 
 spark.sql(f"""
 insert into table fail_fix_suggestions (fail_rsn_key,fix_suggestion) values (
