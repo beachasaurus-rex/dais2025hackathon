@@ -48,10 +48,10 @@ fail_rsn_df = spark.sql("""
         a.notebook_path
     from fail_rsn a
     inner join (
-        select max(rsn_when)
+        select max(rsn_when) as max_rsn_when
         from fail_rsn
     ) b
-    on a.rsn_when = b.rsn_when
+    on a.rsn_when = b.max_rsn_when
 """)
 rsn_key = fail_rsn_df.collect()[0]
 fail_rsn = fail_rsn_df.collect()[1]
