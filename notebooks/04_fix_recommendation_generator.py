@@ -30,7 +30,6 @@ def suggest_fix(issue_summary):
     llm.chat(msgs)
 
     resp = llm.complete(prompt)
-
     return resp
 
 
